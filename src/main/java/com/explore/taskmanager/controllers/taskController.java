@@ -64,7 +64,7 @@ public class taskController {
      * @param taskId
      * @return
      */
-    @GetMapping("/getTaskById")
+    @GetMapping(value = "/getTaskById", produces = "application/json")
     public Tasks getTaskById(@RequestParam Integer taskId) {
         logger.info("Fetching task for the given taskid = " + taskId);
         Tasks task = taskManagerService.getTaskByID(taskId);
