@@ -64,7 +64,7 @@ mvn clean package
 ```
 If the build succeeds, a jar file in ./target directory should be created.
 
-> Example : WeatherAPI-0.0.1-SNAPSHOT.jar
+> Example : taskmanager 0.0.1-SNAPSHOT.jar
 
 If the build has succeeded, you can proceed to next step, i.e. starting the web server
 
@@ -72,11 +72,8 @@ If the build has succeeded, you can proceed to next step, i.e. starting the web 
 To start the webserver, execute the jar, by running the following
 
 ```
-java -jar WeatherAPI-0.0.1-SNAPSHOT.jar
+java -jar taskmanager 0.0.1-SNAPSHOT.jar
 ```
-Pass API key for Open cage API as environment variable.
-
-api_key=9df551d9b73743dd94fdac2ea461e1fe
 
 A Tomcat Server should spin up and start listening for requests on port 8081
 
