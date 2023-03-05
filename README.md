@@ -46,9 +46,12 @@ An API to delete a task with Task ID as input.
 ## API Endpoints
 | HTTP Verb | Endpoints | Action |
 |  :---:         |     :---:      |           :---: |
-| GET     | /getWeather         | Fetch weather details using Location key, City and Pincode    |
-| GET     | /getForecast        | Fetch weather forecast for n days using Location key, City and Pincode       |
-| GET     | /getWeatherNearestCity       | Fetch weather details using address      |
+| POST     | /createTask      | Post Endpoint to create task and saving to database.    |
+| GET     | /getAllTasks        | Get Endpoint to fetch all tasks from DB       |
+| GET     | /getTaskById       | Get Endpoint to fetch task for the given TaskId      |
+| PUT     | /updateTaskById       | Put endpoint to update the existing task attributes for the given taskId.      |
+| GET     | /getAuditDetails       | Get Endpoint to fetch AuditDetails for the given taskId.    |
+| DELETE     | /deleteTaskById       | Delete endpoint which deletes the particular task with taskId as input.      |
 
 ## Testing
 The APIs can be tested by running the spring application, by building and executing the project jar.
