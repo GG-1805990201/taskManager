@@ -50,12 +50,16 @@ public class TaskManagerService {
         if (status.length() == 0 || status == null) {
             status = Status.pending;
         } else {
-            if (!Status.states.contains(status)) {
+            if (!checkStatus(status)) {
                 throw new RuntimeException("Invalid Status");
             }
         }
         if (eta.length() == 0 || eta == null) {
             eta = generateETA();
+        }else{
+            if(!checkETAPattern(eta)){
+                throw new InsertingException("ETA field value does not match the required pattern dd/mm/yyyy");
+            }
         }
         Tasks tasks = new Tasks(null, title, eta, status, generateCreatedDate());
         logger.info("Inserting data in DB");
@@ -123,23 +127,29 @@ public class TaskManagerService {
     public void updateandAuditTask(Map<String, String> requestJSON, Integer taskId, Tasks task) throws MapExceptions {
         ObjectMapper oMapper = new ObjectMapper();
         List<AuditField> auditfieldList = new ArrayList<>();
+        Map<String, Object> oldObjectMap = oMapper.convertValue(task, Map.class);
         for (String key : requestJSON.keySet()) {
             if (key.equals("taskId")) {
                 continue;
-            } else {
-                Map<String, Object> oldObjectMap = oMapper.convertValue(task, Map.class);
+            }
                 if (!oldObjectMap.containsKey(key)) {
                     throw new RuntimeException("Key not found");
                 }
                 Object oldvalue = oldObjectMap.get(key);
                 Object updatedValue = requestJSON.get(key);
+                if(key=="status" && !checkStatus(updatedValue.toString())){
+                    throw new RuntimeException("The value of " + key + " attribute cant be updated as updated value is not valid");
+
+                }
+                if(key=="eta" && !checkETAPattern(updatedValue.toString())){
+                    throw new RuntimeException("The value of " + key + " attribute cant be updated as updated value is not valid");
+                }
                 if (oldvalue.equals(updatedValue)) {
-                    System.out.println("The value of " + key + " attribute cant be updated as it is same to oldvalue");
+                    throw new RuntimeException("The value of " + key + " attribute cant be updated as updated value is same to old value");
                 } else {
                     AuditField auditField = new AuditField(key, (String) oldvalue, (String) updatedValue);
                     auditfieldList.add(auditField);
                 }
-            }
         }
         if (!auditfieldList.isEmpty()) {
             List<String> updatedfields = new ArrayList<>();
@@ -223,5 +233,23 @@ public class TaskManagerService {
         SimpleDateFormat formDate = new SimpleDateFormat("dd/MM/yyyy");
         String strDate = formDate.format(new Date()); // option 2
         return strDate;
+    }
+
+    /**
+     * Validates the status field is present in predefined values of status.
+     * @param value
+     * @return
+     */
+    public boolean checkStatus(String value){
+        return Status.states.contains(value);
+    }
+
+    /**
+     * Validtes the eta pattern using regex pattern.
+     * @param value
+     * @return
+     */
+    public boolean checkETAPattern(String value){
+        return value.matches("^([0-2][0-9]||3[0-1])/(0[0-9]||1[0-2])/([0-9][0-9])?[0-9][0-9]$");
     }
 }
