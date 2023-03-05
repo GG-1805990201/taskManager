@@ -93,7 +93,7 @@ public class taskController {
     @GetMapping(value = "/getAuditDetails", produces = "application/json")
     public List<AuditTask> getAuditDetails(@RequestParam Integer taskId) {
         List<AuditTask> auditTasks = taskManagerService.getAuditDetailsById(taskId);
-        if (auditTasks == null) {
+        if (auditTasks.size()==0 || auditTasks == null) {
             throw new InsertingException("Records with taskId : " + taskId + " does not exist in AuditTasks table");
         }
         return auditTasks;
